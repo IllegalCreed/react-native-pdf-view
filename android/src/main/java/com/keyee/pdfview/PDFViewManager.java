@@ -72,6 +72,14 @@ public class PDFViewManager extends SimpleViewManager<PDFView> implements OnPage
     public void onPageChanged(int page, int pageCount) {
         pageNumber = page;
         showLog(format("%s %s / %s", filePath, page, pageCount));
+        WritableMap event = Arguments.createMap();
+        event.putString("message", "" + page);
+        ReactContext reactContext = (ReactContext)pdfView.getContext();
+        reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(
+            pdfView.getId(),
+            "topSelect",
+            event
+         );
     }
 
     @Override

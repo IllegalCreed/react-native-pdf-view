@@ -112,6 +112,7 @@ export default class PDF extends Component {
     render(){
       <PDFView ref={(pdf)=>{this.pdfView = pdf;}}
                          src={"sdcard/pdffile.pdf"}
+                         onPageChange={currentPage => console.log(currentPage)}
                          onLoadComplete = {(pageCount)=>{
                             this.pdfView.setNativeProps({
                                 zoom: 1.5
@@ -137,4 +138,5 @@ var styles = StyleSheet.create({
 | asset        | string 			| null 			 				| the name of a PDF file in the asset folder |   | ✔ |
 | pageNumber    		  | number  	    |	1 		 				| page index | ✔   | ✔ |
 | zoom 		  | number  	    |	1.0 	| zoom scale | ✔   | ✔ |
-| onLoadComplete 			| function     	  | null	 			| page load complete,return page count | ✔   | ✔ |
+| onLoadComplete 			| function     	  | null	 			| page load complete, return page count | ✔   | ✔ |
+| onPageChange 			| function     	  | null	 			| current page changed, return current page index | ✔   | ✔ |

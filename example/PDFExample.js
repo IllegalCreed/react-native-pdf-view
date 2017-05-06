@@ -21,7 +21,11 @@ export default class PDFExample extends React.Component {
   constructor(props) {
     super(props);
     this.pdfView = null;
-    this.pdfPath = RNFS.DocumentDirectoryPath + '/test.pdf'
+    this.pdfPath = RNFS.DocumentDirectoryPath + '/test.pdf';
+    this.state = {
+      currentPage: 0,
+      pageCount: 0
+    }
   }
 
   componentDidMount() {
@@ -30,7 +34,7 @@ export default class PDFExample extends React.Component {
       toFile: this.pdfPath
     };
     RNFS.downloadFile(options).promise.then(res => {
-      this.setState({isPdfDownload: true});
+      this.setState({ isPdfDownload: true });
     }).catch(err => {
       console.log(err);
     });
@@ -38,7 +42,7 @@ export default class PDFExample extends React.Component {
 
   zoom(val = 2.1) {
     this.pdfView && setTimeout(() => {
-      this.pdfView.setNativeProps({zoom: val});
+      this.pdfView.setNativeProps({ zoom: val });
     }, 3000);
   }
 
@@ -51,14 +55,25 @@ export default class PDFExample extends React.Component {
       );
     }
     return (
-      <PDFView ref={(pdf)=>{this.pdfView = pdf;}}
-               key="sop"
-               path={this.pdfPath}
-               onLoadComplete={(pageCount)=>{
-                        console.log(`total page count: ${pageCount}`);
-                        this.zoom();
-                     }}
-               style={styles.pdf}/>
+      <View style={{ flex: 1 }}>
+        <PDFView ref={(pdf) => { this.pdfView = pdf; }}
+          key="sop"
+          path={this.pdfPath}
+          onPageChange={currentPage => this.setState({ currentPage })}
+          onLoadComplete={(pageCount) => {
+            console.log(`total page count: ${pageCount}`);
+            this.setState({ pageCount })
+            this.zoom();
+          }}
+          style={styles.pdf} />
+        <Text style={{
+          position: 'absolute',
+          top: 35,
+          left: 20
+        }}>
+          {this.state.currentPage + '/' + this.state.pageCount}
+        </Text>
+      </View>
     )
   }
 }
